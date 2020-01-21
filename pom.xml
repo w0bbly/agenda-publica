@@ -7,6 +7,13 @@
     <groupId>org.example</groupId>
     <artifactId>agenda-publica</artifactId>
     <version>1.0</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.2.Final</version>
+        </dependency>
+    </dependencies>
 
 
 </project>
