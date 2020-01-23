@@ -4,8 +4,10 @@ import com.example.agendapublica.DTO.ContactDTO;
 import com.example.agendapublica.Entities.Address;
 import com.example.agendapublica.Entities.Contact;
 import com.example.agendapublica.Entities.TelephoneNumber;
-import com.example.agendapublica.Repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.agendapublica.Repository.AddressMapping;
+import com.example.agendapublica.Repository.ContactMapping;
+import com.example.agendapublica.Repository.ContactRepository;
+import com.example.agendapublica.Repository.NumberMapping;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,34 +17,42 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class AgendaServices {
+    private final ContactRepository contactRepository;
+    private final ContactMapping contactMapping;
+    private final AddressMapping addressMapping;
+    private final NumberMapping numberMapping;
 
-    @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
-    private ContactRepository contactRepository;
-    @Autowired
-    private NumberRepository numberRepository;
-    @Autowired
-    private ContactMapping contactMapping;
-    @Autowired
-    private AddressMapping addressMapping;
-    @Autowired
-    private NumberMapping numberMapping;
-
-    public AgendaServices() {
-
+    public AgendaServices(ContactRepository contactRepository, ContactMapping contactMapping, AddressMapping addressMapping, NumberMapping numberMapping) {
+        this.contactRepository = contactRepository;
+        this.contactMapping = contactMapping;
+        this.addressMapping = addressMapping;
+        this.numberMapping = numberMapping;
     }
 
+    /**
+     * @author pims
+     * @return List of all contacts saved in the database in the format of ContactDTO (Data transfer Object)
+     */
     public List<ContactDTO> getAllContacts() {
         List<Contact> contacts = contactRepository.findAll();
         return contactMapping.toDto(contacts);
     }
 
+    /**
+     * @author pims
+     * @param id - id of a Contact
+     * @return The contact saved with the id, passed as param, in the database in the format of ContactDTO (Data transfer Object)
+     */
     public ContactDTO getContactById(Long id) {
         Optional<Contact> contact = contactRepository.findById(id);
         return contact.map(contactMapping::toDto).orElse(null);
     }
 
+    /**
+     * @author pims
+     * @param contactDTO - Object of type ContactDTO
+     * @return The contact created in the database in the format of ContactDTO (Data transfer Object)
+     */
     public ContactDTO createContact(ContactDTO contactDTO) {
         Contact contact = new Contact();
         Address address = new Address();
@@ -58,6 +68,12 @@ public class AgendaServices {
         return contactMapping.toDto(contact);
     }
 
+    /**
+     * @author pims
+     * @param id - id of a Contact
+     * @param contactDTO - Object of type ContactDTO
+     * @return The contact edited in the format of ContactDTO (Data transfer Object)
+     */
     public ContactDTO editContact(Long id, ContactDTO contactDTO) {
         Optional<Contact> contact = contactRepository.findById(id);
         AtomicInteger integer = new AtomicInteger(0);
@@ -89,11 +105,28 @@ public class AgendaServices {
         return null;
     }
 
+    /**
+     * @author pims
+     * @param id - id of a Contact
+     * @return A message informing of success or error in the deletion of the Contact
+     */
     public String deleteContactById(Long id) {
-        return "";
+        Optional<Contact> contact = contactRepository.findById(id);
+
+        if(contact.isPresent()) {
+            contactRepository.delete(contact.get());
+            return "Contact deleted with success!";
+        } else {
+            return "Error while deleting contact";
+        }
     }
 
+    /**
+     * @author pims
+     * @return A message informing of success or error in the deletion of all the Contacts
+     */
     public String deleteAllContacts() {
-        return "";
+        contactRepository.deleteAll();
+        return "All contacts deleted!";
     }
 }

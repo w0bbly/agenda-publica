@@ -8,6 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class TelephoneNumberDTO {
+    private Long id;
     private Long number;
 
     public TelephoneNumberDTO() {
