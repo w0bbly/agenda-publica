@@ -60,4 +60,14 @@ public class AgendaController {
         } else
             return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping(path = "/contacts/all")
+    public ResponseEntity<String> deleteAllContacts() {
+        String response = agendaServices.deleteAllContacts();
+
+        if(response.contains("Error")) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        } else
+            return ResponseEntity.ok(response);
+    }
 }

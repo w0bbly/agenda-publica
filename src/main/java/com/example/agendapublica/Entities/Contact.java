@@ -17,13 +17,11 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
     private Long id;
-    @NotNull
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinColumn(name = "addressId")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "addressId", referencedColumnName = "id")
     private Address address;
-    @NotNull
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinColumn(name = "numberId")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contactId", referencedColumnName = "id")
     private List<TelephoneNumber> telephoneNumbers;
 
     public Contact() {
