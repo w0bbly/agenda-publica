@@ -16,4 +16,4 @@ As entidades do sistema são:
 
 Contact, Address e TelephoneNumber. 
 
-Sendo que um #Contact possui apenas um #Address e pode possuir N TelephoneNumbers
+Sendo que um # Contact possui apenas um #Address e pode possuir N # TelephoneNumbers
